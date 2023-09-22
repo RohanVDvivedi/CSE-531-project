@@ -1,22 +1,20 @@
+syntax = "proto3";
+
 service Branch {
   rpc MsgDelivery (Request) returns (Response) {}
 }
 
 message Request {
-  int32 id;
-  string interface;
-  optional int32 money;
+  int32 id = 1;
+  string interface = 2;
+  optional int32 money = 3;
 }
 
 message Response {
-  string interface;
-
-  message Balance {
-    int32 balance;
-  }
+  string interface = 2;
   
   oneof result {
-    string result;
-    Balance balance;
+    string success = 3;
+    int32 balance = 4;
   };
 }
