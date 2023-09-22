@@ -1,0 +1,22 @@
+service Branch {
+  rpc MsgDelivery (Request) returns (Response) {}
+}
+
+message Request {
+  int32 id;
+  string interface;
+  optional int32 money;
+}
+
+message Response {
+  string interface;
+
+  message Balance {
+    int32 balance;
+  }
+  
+  oneof result {
+    string result;
+    Balance balance;
+  };
+}
