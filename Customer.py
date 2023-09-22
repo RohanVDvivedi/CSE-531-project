@@ -1,6 +1,6 @@
 import grpc
-import example_pb2
-import example_pb2_grpc
+import branch_pb2
+import branch_pb2_grpc
 import time
 
 class Customer:
