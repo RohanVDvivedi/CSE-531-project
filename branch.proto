@@ -9,16 +9,10 @@ service Branch {
 }
 
 message Request {
-  int32 id = 1;
-  string interface = 2;
-  optional int32 money = 3;
+  optional int32 money = 1;
 }
 
 message Response {
-  string interface = 2;
-  
-  oneof result {
-    string success = 3;
-    int32 balance = 4;
-  };
+  bool success = 1;
+  optional int32 balance = 2;
 }
