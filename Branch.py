@@ -16,7 +16,14 @@ class Branch(branch_pb2_grpc.BranchServicer):
         # the list of process IDs of the branches
         self.branches = branches
         # the list of Client stubs to communicate with the branches
+        self.channels = list()
         self.stubList = list()
+        for branch in branches :
+            if branch == self.id :
+                continue
+            self.channels.append(grpc.insecure_channel("localhost:5000" + str(branch)))
+            self.stubs.append(branch_pb2_grpc.BranchStub(self.channel[-1]))
+
         # a list of received messages used for debugging purpose
         self.recvMsg = list()
         # iterate the processID of the branches
@@ -39,6 +46,8 @@ class Branch(branch_pb2_grpc.BranchServicer):
         print(request)
         with self.balanceLock:
             self.balance -= request.money
+        for branch in self.stubList :
+            branch.Propogate_Withdraw(request)
         return branch_pb2.Response(success = True)
     
     def Deposit(self, request, context):
@@ -47,6 +56,8 @@ class Branch(branch_pb2_grpc.BranchServicer):
         print(request)
         with self.balanceLock:
             self.balance += request.money
+        for branch in self.stubList :
+            branch.Propogate_Deposit(request)
         return branch_pb2.Response(success = True)
     
     def Propogate_Withdraw(self, request, context):
