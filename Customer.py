@@ -33,6 +33,9 @@ class Customer:
             self.recvMsg.append(response)
         print(self.recvMsg)
 
-# use customer
-c = Customer(1, [{"id": 1, "interface": "query"}])
-c.executeEvents()
+def run() :
+    c = Customer(1, [{"id": 1, "interface": "query"}])
+    c.executeEvents()
+
+if __name__ == "__main__" :
+    run()
