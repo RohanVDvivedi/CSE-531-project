@@ -44,3 +44,10 @@ class Branch(branch_pb2_grpc.BranchServicer):
         self.recvMsg.append(request)
         self.balance += request.money
         return branch_pb2.Request(success = True)
+    
+b = Branch(1, 500, [1])
+
+server = grpc.server()
+branch_pb2_grpc.add_BranchServicer_to_server(b, server)
+server.add_insecure_port("localhost:5000" + str(b.id))
+server.wait_for_termination()
