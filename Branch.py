@@ -23,15 +23,24 @@ class Branch(branch_pb2_grpc.BranchServicer):
     # TODO: students are expected to process requests from both Client and Branch
     def Query(self, request, context):
         self.recvMsg.append(request)
+        return branch_pb2.Request(money = self.balance)
     
     def Withdraw(self, request, context):
         self.recvMsg.append(request)
+        self.balance -= request.money
+        return branch_pb2.Request(success = True)
     
     def Deposit(self, request, context):
         self.recvMsg.append(request)
+        self.balance += request.money
+        return branch_pb2.Request(success = True)
     
     def Propogate_Withdraw(self, request, context):
         self.recvMsg.append(request)
+        self.balance -= request.money
+        return branch_pb2.Request(success = True)
     
     def Propogate_Deposit(self, request, context):
         self.recvMsg.append(request)
+        self.balance += request.money
+        return branch_pb2.Request(success = True)
