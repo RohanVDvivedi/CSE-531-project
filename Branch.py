@@ -76,8 +76,8 @@ class Branch(branch_pb2_grpc.BranchServicer):
             self.balance += request.money
         return branch_pb2.Response(success = True)
 
-def serve() :
-    b = Branch(1, 500, [1])
+def serve(id, balance, branches) :
+    b = Branch(id, balance, branches)
     server = grpc.server(futures.ThreadPoolExecutor(max_workers = 5))
     branch_pb2_grpc.add_BranchServicer_to_server(b, server)
     server.add_insecure_port("localhost:5000" + str(b.id))
@@ -85,4 +85,4 @@ def serve() :
     server.wait_for_termination()
 
 if __name__ == "__main__" :
-    serve()
+    serve(1, 500, [1])
