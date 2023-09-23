@@ -3,6 +3,7 @@ import branch_pb2
 import branch_pb2_grpc
 from concurrent import futures
 from threading import Lock
+import signal
 
 class Branch(branch_pb2_grpc.BranchServicer):
 
@@ -21,7 +22,7 @@ class Branch(branch_pb2_grpc.BranchServicer):
         for branch in branches :
             if branch == self.id :
                 continue
-            self.channels.append(grpc.insecure_channel("localhost:5000" + str(branch)))
+            self.channels.append(grpc.insecure_channel("localhost:" + str(50000 + branch)))
             self.stubs.append(branch_pb2_grpc.BranchStub(self.channel[-1]))
 
         # a list of received messages used for debugging purpose
@@ -77,13 +78,18 @@ class Branch(branch_pb2_grpc.BranchServicer):
             self.balance += request.money
         return branch_pb2.Response(success = True)
 
+def serve_stop(server, b) :
+    server.stop(None)
+    del b
+
 def serve(id, balance, branches) :
     b = Branch(id, balance, branches)
     server = grpc.server(futures.ThreadPoolExecutor(max_workers = 5))
     branch_pb2_grpc.add_BranchServicer_to_server(b, server)
-    server.add_insecure_port("localhost:5000" + str(b.id))
+    server.add_insecure_port("localhost:" + str(50000 + b.id))
     server.start()
-    server.wait_for_termination()
+    signal.signal(signal.SIGINT, lambda sig, frame : serve_stop(server, b))
+    signal.pause()
 
 if __name__ == "__main__" :
     serve(1, 500, [1])

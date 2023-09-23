@@ -19,7 +19,7 @@ class Customer:
 
     # TODO: students are expected to create the Customer stub
     def createStub(self):
-        self.channel = grpc.insecure_channel("localhost:5000" + str(self.id))
+        self.channel = grpc.insecure_channel("localhost:" + str(50000 + self.id))
         return branch_pb2_grpc.BranchStub(self.channel)
 
     # TODO: students are expected to send out the events to the Bank
