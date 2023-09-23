@@ -34,7 +34,7 @@ class Customer:
         print(self.recvMsg)
 
 def run() :
-    c = Customer(1, [{"id": 1, "interface": "query"}])
+    c = Customer(1, [{"id": 1, "interface": "query"}, {"id": 2, "interface": "deposit", "money" : 170}, {"id": 3, "interface": "withdraw", "money" : 70}, {"id": 4, "interface": "query"}])
     c.executeEvents()
 
 if __name__ == "__main__" :
