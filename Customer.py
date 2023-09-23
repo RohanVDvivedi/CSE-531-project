@@ -24,9 +24,11 @@ class Customer:
         for event in self.events :
             response = None
             if event["interface"] == "query" :
-                response = self.stub.MsgDelivery(branch_pb2.Request(id = event["id"], interface = event["interface"]))
-            else:
-                response = self.stub.MsgDelivery(branch_pb2.Request(id = event["id"], interface = event["interface"], money = event["money"]))
+                response = self.stub.Query(branch_pb2.Request())
+            elif event["interface"] == "withdraw":
+                response = self.stub.Withdraw(branch_pb2.Request(money = event["money"]))
+            elif event["interface"] == "deposit":
+                response = self.stub.Deposit(branch_pb2.Request(money = event["money"]))
             self.recvMsg.append(response)
         print(self.recvMsg)
 
