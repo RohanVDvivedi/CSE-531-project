@@ -28,8 +28,9 @@ class Branch(branch_pb2_grpc.BranchServicer):
         self.recvMsg = list()
         # iterate the processID of the branches
 
-        # TODO: students are expected to store the processID of the branches
-        pass
+    def __del__(self) :
+        for c in self.channels :
+            c.close()
 
     # TODO: students are expected to process requests from both Client and Branch
     def Query(self, request, context):

@@ -14,6 +14,9 @@ class Customer:
         # pointer for the stub
         self.stub = self.createStub()
 
+    def __del__(self) :
+        self.channel.close()
+
     # TODO: students are expected to create the Customer stub
     def createStub(self):
         self.channel = grpc.insecure_channel("localhost:5000" + str(self.id))
