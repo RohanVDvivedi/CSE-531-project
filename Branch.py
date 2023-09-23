@@ -1,6 +1,7 @@
 import grpc
 import branch_pb2
 import branch_pb2_grpc
+from concurrent import futures
 
 class Branch(branch_pb2_grpc.BranchServicer):
 
@@ -23,31 +24,42 @@ class Branch(branch_pb2_grpc.BranchServicer):
     # TODO: students are expected to process requests from both Client and Branch
     def Query(self, request, context):
         self.recvMsg.append(request)
-        return branch_pb2.Request(money = self.balance)
+        print("query")
+        print(request)
+        return branch_pb2.Response(balance = self.balance)
     
     def Withdraw(self, request, context):
         self.recvMsg.append(request)
+        print("withdraw")
+        print(request)
         self.balance -= request.money
-        return branch_pb2.Request(success = True)
+        return branch_pb2.Response(success = True)
     
     def Deposit(self, request, context):
         self.recvMsg.append(request)
+        print("deposit")
+        print(request)
         self.balance += request.money
-        return branch_pb2.Request(success = True)
+        return branch_pb2.Response(success = True)
     
     def Propogate_Withdraw(self, request, context):
         self.recvMsg.append(request)
+        print("propogate_withdraw")
+        print(request)
         self.balance -= request.money
-        return branch_pb2.Request(success = True)
+        return branch_pb2.Response(success = True)
     
     def Propogate_Deposit(self, request, context):
         self.recvMsg.append(request)
+        print("propogate_deposit")
+        print(request)
         self.balance += request.money
-        return branch_pb2.Request(success = True)
+        return branch_pb2.Response(success = True)
     
 b = Branch(1, 500, [1])
 
-server = grpc.server()
+server = grpc.server(futures.ThreadPoolExecutor(max_workers = 5))
 branch_pb2_grpc.add_BranchServicer_to_server(b, server)
 server.add_insecure_port("localhost:5000" + str(b.id))
+server.start()
 server.wait_for_termination()

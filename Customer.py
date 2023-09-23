@@ -24,6 +24,7 @@ class Customer:
         for event in self.events :
             response = None
             if event["interface"] == "query" :
+                print("querying")
                 response = self.stub.Query(branch_pb2.Request())
             elif event["interface"] == "withdraw":
                 response = self.stub.Withdraw(branch_pb2.Request(money = event["money"]))
