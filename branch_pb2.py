@@ -13,7 +13,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0c\x62ranch.proto\"F\n\x07Request\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x11\n\tinterface\x18\x02 \x01(\t\x12\x12\n\x05money\x18\x03 \x01(\x05H\x00\x88\x01\x01\x42\x08\n\x06_money\"M\n\x08Response\x12\x11\n\tinterface\x18\x02 \x01(\t\x12\x11\n\x07success\x18\x03 \x01(\tH\x00\x12\x11\n\x07\x62\x61lance\x18\x04 \x01(\x05H\x00\x42\x08\n\x06result2.\n\x06\x42ranch\x12$\n\x0bMsgDelivery\x12\x08.Request\x1a\t.Response\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0c\x62ranch.proto\"F\n\x07Request\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x11\n\tinterface\x18\x02 \x01(\t\x12\x12\n\x05money\x18\x03 \x01(\x05H\x00\x88\x01\x01\x42\x08\n\x06_money\"M\n\x08Response\x12\x11\n\tinterface\x18\x02 \x01(\t\x12\x11\n\x07success\x18\x03 \x01(\tH\x00\x12\x11\n\x07\x62\x61lance\x18\x04 \x01(\x05H\x00\x42\x08\n\x06result2\xc6\x01\n\x06\x42ranch\x12\x1e\n\x05Query\x12\x08.Request\x1a\t.Response\"\x00\x12!\n\x08Withdraw\x12\x08.Request\x1a\t.Response\"\x00\x12 \n\x07\x44\x65posit\x12\x08.Request\x1a\t.Response\"\x00\x12+\n\x12Propogate_Withdraw\x12\x08.Request\x1a\t.Response\"\x00\x12*\n\x11Propogate_Deposit\x12\x08.Request\x1a\t.Response\"\x00\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -25,6 +25,6 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _globals['_REQUEST']._serialized_end=86
   _globals['_RESPONSE']._serialized_start=88
   _globals['_RESPONSE']._serialized_end=165
-  _globals['_BRANCH']._serialized_start=167
-  _globals['_BRANCH']._serialized_end=213
+  _globals['_BRANCH']._serialized_start=168
+  _globals['_BRANCH']._serialized_end=366
 # @@protoc_insertion_point(module_scope)

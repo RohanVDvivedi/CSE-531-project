@@ -21,5 +21,5 @@ class Branch(branch_pb2_grpc.BranchServicer):
         pass
 
     # TODO: students are expected to process requests from both Client and Branch
-    def MsgDelivery(self,request, context):
-        pass
+    def MsgDelivery(self, request, context):
+        self.recvMsg.append(request)

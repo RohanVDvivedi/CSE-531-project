@@ -1,7 +1,11 @@
 syntax = "proto3";
 
 service Branch {
-  rpc MsgDelivery (Request) returns (Response) {}
+  rpc Query (Request) returns (Response) {}
+  rpc Withdraw (Request) returns (Response) {}
+  rpc Deposit (Request) returns (Response) {}
+  rpc Propogate_Withdraw (Request) returns (Response) {}
+  rpc Propogate_Deposit (Request) returns (Response) {}
 }
 
 message Request {
