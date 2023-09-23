@@ -2,6 +2,7 @@ import grpc
 import branch_pb2
 import branch_pb2_grpc
 from concurrent import futures
+from threading import Lock
 
 class Branch(branch_pb2_grpc.BranchServicer):
 
@@ -10,6 +11,8 @@ class Branch(branch_pb2_grpc.BranchServicer):
         self.id = id
         # replica of the Branch's balance
         self.balance = balance
+        # lock to protect balance
+        self.balanceLock = Lock()
         # the list of process IDs of the branches
         self.branches = branches
         # the list of Client stubs to communicate with the branches
@@ -26,34 +29,40 @@ class Branch(branch_pb2_grpc.BranchServicer):
         self.recvMsg.append(request)
         print("query")
         print(request)
-        return branch_pb2.Response(balance = self.balance)
+        with self.balanceLock:
+            balance = self.balance
+        return branch_pb2.Response(balance = balance)
     
     def Withdraw(self, request, context):
         self.recvMsg.append(request)
         print("withdraw")
         print(request)
-        self.balance -= request.money
+        with self.balanceLock:
+            self.balance -= request.money
         return branch_pb2.Response(success = True)
     
     def Deposit(self, request, context):
         self.recvMsg.append(request)
         print("deposit")
         print(request)
-        self.balance += request.money
+        with self.balanceLock:
+            self.balance += request.money
         return branch_pb2.Response(success = True)
     
     def Propogate_Withdraw(self, request, context):
         self.recvMsg.append(request)
         print("propogate_withdraw")
         print(request)
-        self.balance -= request.money
+        with self.balanceLock:
+            self.balance -= request.money
         return branch_pb2.Response(success = True)
     
     def Propogate_Deposit(self, request, context):
         self.recvMsg.append(request)
         print("propogate_deposit")
         print(request)
-        self.balance += request.money
+        with self.balanceLock:
+            self.balance += request.money
         return branch_pb2.Response(success = True)
     
 b = Branch(1, 500, [1])
