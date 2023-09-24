@@ -89,6 +89,8 @@ def serve(id, balance, branches) :
     server.add_insecure_port("localhost:" + str(50000 + b.id))
     server.start()
     signal.signal(signal.SIGINT, lambda sig, frame : serve_stop(server, b))
+    signal.signal(signal.SIGTERM, lambda sig, frame : serve_stop(server, b))
+    signal.signal(signal.SIGKILL, lambda sig, frame : serve_stop(server, b))
     signal.pause()
 
 if __name__ == "__main__" :
