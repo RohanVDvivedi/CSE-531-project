@@ -23,7 +23,7 @@ class Branch(branch_pb2_grpc.BranchServicer):
             if branch == self.id :
                 continue
             self.channels.append(grpc.insecure_channel("localhost:" + str(50000 + branch)))
-            self.stubs.append(branch_pb2_grpc.BranchStub(self.channel[-1]))
+            self.stubList.append(branch_pb2_grpc.BranchStub(self.channels[-1]))
 
         # a list of received messages used for debugging purpose
         self.recvMsg = list()
@@ -89,8 +89,6 @@ def serve(id, balance, branches) :
     server.add_insecure_port("localhost:" + str(50000 + b.id))
     server.start()
     signal.signal(signal.SIGINT, lambda sig, frame : serve_stop(server, b))
-    signal.signal(signal.SIGTERM, lambda sig, frame : serve_stop(server, b))
-    signal.signal(signal.SIGKILL, lambda sig, frame : serve_stop(server, b))
     signal.pause()
 
 if __name__ == "__main__" :
