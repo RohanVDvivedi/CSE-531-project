@@ -25,27 +25,17 @@ class Branch(branch_pb2_grpc.BranchServicer):
             self.channels.append(grpc.insecure_channel("localhost:" + str(50000 + branch)))
             self.stubList.append(branch_pb2_grpc.BranchStub(self.channels[-1]))
 
-        # a list of received messages used for debugging purpose
-        self.recvMsg = list()
-        # iterate the processID of the branches
-
     def __del__(self) :
         for c in self.channels :
             c.close()
 
     # TODO: students are expected to process requests from both Client and Branch
     def Query(self, request, context):
-        self.recvMsg.append(request)
-        print("query")
-        print(request)
         with self.balanceLock:
             balance = self.balance
         return branch_pb2.Response(balance = balance)
     
     def Withdraw(self, request, context):
-        self.recvMsg.append(request)
-        print("withdraw")
-        print(request)
         with self.balanceLock:
             self.balance -= request.money
         for branch in self.stubList :
@@ -53,9 +43,6 @@ class Branch(branch_pb2_grpc.BranchServicer):
         return branch_pb2.Response(success = True)
     
     def Deposit(self, request, context):
-        self.recvMsg.append(request)
-        print("deposit")
-        print(request)
         with self.balanceLock:
             self.balance += request.money
         for branch in self.stubList :
@@ -63,17 +50,11 @@ class Branch(branch_pb2_grpc.BranchServicer):
         return branch_pb2.Response(success = True)
     
     def Propogate_Withdraw(self, request, context):
-        self.recvMsg.append(request)
-        print("propogate_withdraw")
-        print(request)
         with self.balanceLock:
             self.balance -= request.money
         return branch_pb2.Response(success = True)
     
     def Propogate_Deposit(self, request, context):
-        self.recvMsg.append(request)
-        print("propogate_deposit")
-        print(request)
         with self.balanceLock:
             self.balance += request.money
         return branch_pb2.Response(success = True)
