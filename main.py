@@ -27,21 +27,16 @@ for branch in input_params :
 # sleep for a second, let the servers start
 time.sleep(1)
 
-customer_pids = []
 for customer in input_params :
     if customer["type"] == "customer" :
         p = mp.Process(target = Customer.run,  args = (int(customer["id"]), customer["events"]))
         p.start()
-        customer_pids.append(p)
+        p.join()
 
 # let the proceessing and message passing occur
-time.sleep(10)
+time.sleep(3)
 
-# join all customers and branches
-
-for customer_pid in customer_pids :
-    customer_pid.join()
-
+# join all branches
 for branch_pid in branch_pids :
     os.kill(branch_pid.pid, signal.SIGINT)
     branch_pid.join()
