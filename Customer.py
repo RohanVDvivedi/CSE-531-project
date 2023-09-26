@@ -2,6 +2,7 @@ import grpc
 import branch_pb2
 import branch_pb2_grpc
 import time
+import json
 
 class Customer:
     def __init__(self, id, events):
@@ -27,14 +28,26 @@ class Customer:
         for event in self.events :
             response = None
             if event["interface"] == "query" :
-                print("querying")
                 response = self.stub.Query(branch_pb2.Request())
             elif event["interface"] == "withdraw":
                 response = self.stub.Withdraw(branch_pb2.Request(money = event["money"]))
             elif event["interface"] == "deposit":
                 response = self.stub.Deposit(branch_pb2.Request(money = event["money"]))
             self.recvMsg.append(response)
-        print(self.recvMsg)
+
+        results = {}
+        results["id"] = self.id
+        results["recv"] = []
+        for i in range(len(self.events)) :
+            results["recv"].append({"interface": self.events[i]["interface"]})
+            if(self.events[i]["interface"] == "query") :
+                results["recv"][-1]["result"] = {"balance" : self.recvMsg[i].balance}
+            else :
+                results["recv"][-1]["result"] = "succes" if self.recvMsg[i].success else "fail"
+
+        results_json = json.dumps(results)
+
+        print(results_json)
 
 def run(id, events) :
     c = Customer(id, events)
