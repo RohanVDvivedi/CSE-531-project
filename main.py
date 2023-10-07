@@ -40,7 +40,7 @@ for customer_pid in customer_pids :
     customer_pid.join()
 
 # let the proceessing and message passing occur
-time.sleep(3)
+#time.sleep(3)
 
 # join all branches
 for branch_pid in branch_pids :
