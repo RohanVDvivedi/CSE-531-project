@@ -41,7 +41,7 @@ class Customer:
         for i in range(len(self.events)) :
             results["recv"].append({"interface": self.events[i]["interface"]})
             if(self.events[i]["interface"] == "query") :
-                results["recv"][-1]["result"] = {"balance" : self.recvMsg[i].balance}
+                results["recv"][-1]["balance"] = self.recvMsg[i].balance
             else :
                 results["recv"][-1]["result"] = "succes" if self.recvMsg[i].success else "fail"
 
