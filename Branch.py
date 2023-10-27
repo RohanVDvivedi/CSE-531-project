@@ -24,6 +24,8 @@ class Branch(branch_pb2_grpc.BranchServicer):
                 continue
             self.channels.append(grpc.insecure_channel("localhost:" + str(50000 + branch)))
             self.stubList.append(branch_pb2_grpc.BranchStub(self.channels[-1]))
+        # logical clock
+        self.logical_clock = 0
 
     def __del__(self) :
         for c in self.channels :

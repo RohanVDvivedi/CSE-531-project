@@ -14,6 +14,8 @@ class Customer:
         self.recvMsg = list()
         # pointer for the stub
         self.stub = self.createStub()
+        # logical clock
+        self.logical_clock = 0
 
     def __del__(self) :
         self.channel.close()
