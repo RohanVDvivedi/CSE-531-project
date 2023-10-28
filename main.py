@@ -34,9 +34,12 @@ for customer in input_params :
         p = mp.Process(target = Customer.run,  args = (int(customer["id"]), customer["events"]))
         customer_pids.append(p)
 
-# run and join customer processes
+# run customer processes
 for customer_pid in customer_pids :
     customer_pid.start()
+
+# join customer processes
+for customer_pid in customer_pids :
     customer_pid.join()
 
 # let the proceessing and message passing occur
