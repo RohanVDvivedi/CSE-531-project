@@ -29,12 +29,15 @@ class Customer:
     def executeEvents(self):
         for event in self.events :
             response = None
+            self.logical_clock += 1
+            curr_message_logical_clock = self.logical_clock
             if event["interface"] == "query" :
-                response = self.stub.Query(branch_pb2.Request())
+                response = self.stub.Query(branch_pb2.Request(customer_request_id = int(event["customer_request_id"]), logical_clock = curr_message_logical_clock))
             elif event["interface"] == "withdraw":
-                response = self.stub.Withdraw(branch_pb2.Request(money = event["money"]))
+                response = self.stub.Withdraw(branch_pb2.Request(customer_request_id = int(event["customer_request_id"]), logical_clock = curr_message_logical_clock, money = event["money"]))
             elif event["interface"] == "deposit":
-                response = self.stub.Deposit(branch_pb2.Request(money = event["money"]))
+                response = self.stub.Deposit(branch_pb2.Request(customer_request_id = int(event["customer_request_id"]), logical_clock = curr_message_logical_clock, money = event["money"]))
+            self.logical_clock = max(self.logical_clock, response.logical_clock) + 1
             self.recvMsg.append(response)
 
         results = {}
@@ -45,7 +48,7 @@ class Customer:
             if(self.events[i]["interface"] == "query") :
                 results["recv"][-1]["balance"] = self.recvMsg[i].balance
             else :
-                results["recv"][-1]["result"] = "succes" if self.recvMsg[i].success else "fail"
+                results["recv"][-1]["result"] = "success" if self.recvMsg[i].success else "fail"
 
         results_json = json.dumps(results)
 
