@@ -33,6 +33,7 @@ class Branch(branch_pb2_grpc.BranchServicer):
 
     # TODO: students are expected to process requests from both Client and Branch
     def Query(self, request, context):
+        print("Branch Query: " + str(self.id))
         with self.balanceLock:
             balance = self.balance
             # compute recv time stamp
@@ -43,6 +44,7 @@ class Branch(branch_pb2_grpc.BranchServicer):
         return response
     
     def Withdraw(self, request, context):
+        print("Branch Withdraw: " + str(self.id))
         with self.balanceLock:
             self.balance -= request.money
             # compute recv timestamp
@@ -59,8 +61,10 @@ class Branch(branch_pb2_grpc.BranchServicer):
         return response
     
     def Deposit(self, request, context):
+        print("Branch Deposit: " + str(self.id))
         with self.balanceLock:
-            self.balance -= request.money
+            print("+Branch Deposit: " + str(self.id))
+            self.balance += request.money
             # compute recv timestamp
             self.logical_clock = max(self.logical_clock, request.logical_clock) + 1
             for branch in self.stubList :

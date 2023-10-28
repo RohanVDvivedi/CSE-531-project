@@ -27,6 +27,7 @@ class Customer:
 
     # TODO: students are expected to send out the events to the Bank
     def executeEvents(self):
+        print("Customer: " + str(self.id))
         event_processed = []
 
         for event in self.events :
