@@ -27,30 +27,22 @@ class Customer:
 
     # TODO: students are expected to send out the events to the Bank
     def executeEvents(self):
+        event_processed = []
+
         for event in self.events :
-            response = None
             self.logical_clock += 1
             curr_message_logical_clock = self.logical_clock
             if event["interface"] == "query" :
-                response = self.stub.Query(branch_pb2.Request(customer_request_id = int(event["customer_request_id"]), logical_clock = curr_message_logical_clock))
+                response = self.stub.Query(branch_pb2.Request(customer_request_id = int(event["customer-request-id"]), logical_clock = curr_message_logical_clock))
             elif event["interface"] == "withdraw":
-                response = self.stub.Withdraw(branch_pb2.Request(customer_request_id = int(event["customer_request_id"]), logical_clock = curr_message_logical_clock, money = event["money"]))
+                response = self.stub.Withdraw(branch_pb2.Request(customer_request_id = int(event["customer-request-id"]), logical_clock = curr_message_logical_clock, money = event["money"]))
             elif event["interface"] == "deposit":
-                response = self.stub.Deposit(branch_pb2.Request(customer_request_id = int(event["customer_request_id"]), logical_clock = curr_message_logical_clock, money = event["money"]))
+                response = self.stub.Deposit(branch_pb2.Request(customer_request_id = int(event["customer-request-id"]), logical_clock = curr_message_logical_clock, money = event["money"]))
+            event_processed.append({"customer_request_id" : int(event["customer_request_id"]), "logical_clock" : self.logical_clock, "interface": event["interface"], "comment": "event_sent from customer" + str(self.id)})
             self.logical_clock = max(self.logical_clock, response.logical_clock) + 1
             self.recvMsg.append(response)
 
-        results = {}
-        results["id"] = self.id
-        results["recv"] = []
-        for i in range(len(self.events)) :
-            results["recv"].append({"interface": self.events[i]["interface"]})
-            if(self.events[i]["interface"] == "query") :
-                results["recv"][-1]["balance"] = self.recvMsg[i].balance
-            else :
-                results["recv"][-1]["result"] = "success" if self.recvMsg[i].success else "fail"
-
-        results_json = json.dumps(results)
+        results_json = json.dumps(event_processed)
 
         print(results_json)
 

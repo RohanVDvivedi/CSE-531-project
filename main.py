@@ -31,7 +31,7 @@ time.sleep(1)
 customer_pids = []
 for customer in input_params :
     if customer["type"] == "customer" :
-        p = mp.Process(target = Customer.run,  args = (int(customer["id"]), customer["events"]))
+        p = mp.Process(target = Customer.run,  args = (int(customer["id"]), customer["customer-requests"]))
         customer_pids.append(p)
 
 # run customer processes
