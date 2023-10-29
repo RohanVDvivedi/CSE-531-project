@@ -42,61 +42,35 @@ class Branch(branch_pb2_grpc.BranchServicer):
 
     # TODO: students are expected to process requests from both Client and Branch
     def Query(self, request, context):
+        self.advance_and_get_logical_clock(request.logical_clock)
         balance = self.balance
-        # compute recv time stamp
-        self.logical_clock = max(self.logical_clock, request.logical_clock) + 1
-        # compute send time stamp
-        self.logical_clock += 1
-        response = branch_pb2.Response(customer_request_id = request.customer_request_id, logical_clock = self.logical_clock, balance = balance)
-        return response
+        return branch_pb2.Response(customer_request_id = request.customer_request_id, logical_clock = self.advance_and_get_logical_clock(), balance = balance)
     
     def Withdraw(self, request, context):
+        self.advance_and_get_logical_clock(request.logical_clock)
         self.balance -= request.money
-        # compute recv timestamp
-        self.logical_clock = max(self.logical_clock, request.logical_clock) + 1
         for branch in self.stubList :
-            # compute send timestamp
-            self.logical_clock += 1
-            resp = branch.Propogate_Withdraw(branch_pb2.Request(customer_request_id = request.customer_request_id, logical_clock = self.logical_clock))
-            # compute recv timestamp
-            self.logical_clock = max(self.logical_clock, resp.logical_clock) + 1
-        # compute send timestamp
-        self.logical_clock += 1
-        response = branch_pb2.Response(customer_request_id = request.customer_request_id, logical_clock = self.logical_clock, success = True)
-        return response
+            resp = branch.Propogate_Withdraw(branch_pb2.Request(customer_request_id = request.customer_request_id, logical_clock = self.advance_and_get_logical_clock()))
+            self.advance_and_get_logical_clock(resp.logical_clock)
+        return branch_pb2.Response(customer_request_id = request.customer_request_id, logical_clock = self.advance_and_get_logical_clock(), success = True)
     
     def Deposit(self, request, context):
+        self.advance_and_get_logical_clock(request.logical_clock)
         self.balance += request.money
-        # compute recv timestamp
-        self.logical_clock = max(self.logical_clock, request.logical_clock) + 1
         for branch in self.stubList :
-            # compute send timestamp
-            self.logical_clock += 1
-            resp = branch.Propogate_Deposit(branch_pb2.Request(customer_request_id = request.customer_request_id, logical_clock = self.logical_clock))
-            # compute recv timestamp
-            self.logical_clock = max(self.logical_clock, resp.logical_clock) + 1
-        # compute send timestamp
-        self.logical_clock += 1
-        response = branch_pb2.Response(customer_request_id = request.customer_request_id, logical_clock = self.logical_clock, success = True)
-        return response
+            resp = branch.Propogate_Deposit(branch_pb2.Request(customer_request_id = request.customer_request_id, logical_clock = self.advance_and_get_logical_clock()))
+            self.advance_and_get_logical_clock(resp.logical_clock)
+        return branch_pb2.Response(customer_request_id = request.customer_request_id, logical_clock = self.advance_and_get_logical_clock(), success = True)
     
     def Propogate_Withdraw(self, request, context):
+        self.advance_and_get_logical_clock(request.logical_clock)
         self.balance -= request.money
-        # compute recv timestamp
-        self.logical_clock = max(self.logical_clock, request.logical_clock) + 1
-        # compute send timestamp
-        self.logical_clock += 1
-        response = branch_pb2.Response(customer_request_id = request.customer_request_id, logical_clock = self.logical_clock, success = True)
-        return response
+        return branch_pb2.Response(customer_request_id = request.customer_request_id, logical_clock = self.advance_and_get_logical_clock(), success = True)
     
     def Propogate_Deposit(self, request, context):
+        self.advance_and_get_logical_clock(request.logical_clock)
         self.balance += request.money
-        # compute recv timestamp
-        self.logical_clock = max(self.logical_clock, request.logical_clock) + 1
-        # compute send timestamp
-        self.logical_clock += 1
-        response = branch_pb2.Response(customer_request_id = request.customer_request_id, logical_clock = self.logical_clock, success = True)
-        return response
+        return branch_pb2.Response(customer_request_id = request.customer_request_id, logical_clock = self.advance_and_get_logical_clock(), success = True)
 
 def serve_stop(server, b) :
     server.stop(None)
