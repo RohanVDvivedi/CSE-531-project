@@ -24,10 +24,21 @@ class Branch(branch_pb2_grpc.BranchServicer):
             self.stubList.append(branch_pb2_grpc.BranchStub(self.channels[-1]))
         # logical clock
         self.logical_clock = 0
+        self.logical_clock_lock = Lock()
 
     def __del__(self) :
         for c in self.channels :
             c.close()
+    
+    def advance_and_get_logical_clock(self, recv_logical_clock = None) :
+        with self.logical_clock_lock:
+            if recv_logical_clock == None :
+                self.logical_clock += 1
+            else :
+                self.logical_clock = max(self.logical_clock, recv_logical_clock) + 1
+            curr_logical_clock = self.logical_clock
+        return curr_logical_clock
+
 
     # TODO: students are expected to process requests from both Client and Branch
     def Query(self, request, context):
