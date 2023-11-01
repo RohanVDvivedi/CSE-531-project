@@ -90,9 +90,9 @@ class Branch(branch_pb2_grpc.BranchServicer):
         return branch_pb2.Response(customer_request_id = request.customer_request_id, logical_clock = send_time, success = True)
 
 def serve_stop(server, b) :
-    event_processed = b.event_processed
-    event_processed.sort(key = lambda e : e["logical_clock"])
-    results_json = json.dumps(event_processed, indent=4)
+    b.event_processed.sort(key = lambda e : e["logical_clock"])
+    result_object = {"id":b.id, "type":"branch", "events": b.event_processed}
+    results_json = json.dumps(result_object, indent=4)
     print(results_json)
     server.stop(None)
     del b

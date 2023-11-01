@@ -43,7 +43,9 @@ class Customer:
             event_processed.append({"customer_request_id" : int(event["customer-request-id"]), "logical_clock" : self.logical_clock, "interface": event["interface"], "comment": "event_recv from branch " + str(self.id)})
             self.recvMsg.append(response)
 
-        results_json = json.dumps(event_processed, indent=4)
+        event_processed.sort(key = lambda e : e["logical_clock"])
+        result_object = {"id":self.id, "type":"customer", "events": event_processed}
+        results_json = json.dumps(result_object, indent=4)
         print(results_json)
 
 def run(id, events) :
