@@ -10,8 +10,9 @@ service Branch {
 
 message Request {
   int32 customer_request_id = 1;
-  int32 logical_clock = 2;
-  optional int32 money = 3;
+  optional int32 from_branch_id = 2;
+  int32 logical_clock = 3;
+  optional int32 money = 4;
 }
 
 message Response {

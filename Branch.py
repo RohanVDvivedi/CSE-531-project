@@ -57,7 +57,7 @@ class Branch(branch_pb2_grpc.BranchServicer):
         for branch_id, branch in zip(self.branches, self.stubList) :
             send_time = self.advance_and_get_logical_clock()
             self.event_processed.append({"customer-request-id": request.customer_request_id, "logical_clock": send_time, "interface": "propogate_withdraw", "comment":"event_sent to branch " + str(branch_id)})
-            resp = branch.Propogate_Withdraw(branch_pb2.Request(customer_request_id = request.customer_request_id, logical_clock = send_time))
+            resp = branch.Propogate_Withdraw(branch_pb2.Request(customer_request_id = request.customer_request_id, from_branch_id = self.id, logical_clock = send_time))
             recv_time = self.advance_and_get_logical_clock(resp.logical_clock)
         send_time = self.advance_and_get_logical_clock()
         return branch_pb2.Response(customer_request_id = request.customer_request_id, logical_clock = send_time, success = True)
@@ -69,19 +69,21 @@ class Branch(branch_pb2_grpc.BranchServicer):
         for branch_id, branch in zip(self.branches, self.stubList) :
             send_time = self.advance_and_get_logical_clock()
             self.event_processed.append({"customer-request-id": request.customer_request_id, "logical_clock": send_time, "interface": "propogate_deposit", "comment":"event_sent to branch " + str(branch_id)})
-            resp = branch.Propogate_Deposit(branch_pb2.Request(customer_request_id = request.customer_request_id, logical_clock = send_time))
+            resp = branch.Propogate_Deposit(branch_pb2.Request(customer_request_id = request.customer_request_id, from_branch_id = self.id, logical_clock = send_time))
             recv_time = self.advance_and_get_logical_clock(resp.logical_clock)
         send_time = self.advance_and_get_logical_clock()
         return branch_pb2.Response(customer_request_id = request.customer_request_id, logical_clock = send_time, success = True)
     
     def Propogate_Withdraw(self, request, context):
         recv_time = self.advance_and_get_logical_clock(request.logical_clock)
+        self.event_processed.append({"customer-request-id": request.customer_request_id, "logical_clock": recv_time, "interface": "propogate_withdraw", "comment":"event_recv from branch " + str(request.from_branch_id)})
         self.balance -= request.money
         send_time = self.advance_and_get_logical_clock()
         return branch_pb2.Response(customer_request_id = request.customer_request_id, logical_clock = send_time, success = True)
     
     def Propogate_Deposit(self, request, context):
         recv_time =self.advance_and_get_logical_clock(request.logical_clock)
+        self.event_processed.append({"customer-request-id": request.customer_request_id, "logical_clock": recv_time, "interface": "propogate_deposit", "comment":"event_recv from branch " + str(request.from_branch_id)})
         self.balance += request.money
         send_time = self.advance_and_get_logical_clock()
         return branch_pb2.Response(customer_request_id = request.customer_request_id, logical_clock = send_time, success = True)

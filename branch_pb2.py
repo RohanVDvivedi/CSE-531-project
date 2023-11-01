@@ -13,7 +13,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0c\x62ranch.proto\"[\n\x07Request\x12\x1b\n\x13\x63ustomer_request_id\x18\x01 \x01(\x05\x12\x15\n\rlogical_clock\x18\x02 \x01(\x05\x12\x12\n\x05money\x18\x03 \x01(\x05H\x00\x88\x01\x01\x42\x08\n\x06_money\"q\n\x08Response\x12\x1b\n\x13\x63ustomer_request_id\x18\x01 \x01(\x05\x12\x15\n\rlogical_clock\x18\x02 \x01(\x05\x12\x0f\n\x07success\x18\x03 \x01(\x08\x12\x14\n\x07\x62\x61lance\x18\x04 \x01(\x05H\x00\x88\x01\x01\x42\n\n\x08_balance2\xc6\x01\n\x06\x42ranch\x12\x1e\n\x05Query\x12\x08.Request\x1a\t.Response\"\x00\x12!\n\x08Withdraw\x12\x08.Request\x1a\t.Response\"\x00\x12 \n\x07\x44\x65posit\x12\x08.Request\x1a\t.Response\"\x00\x12+\n\x12Propogate_Withdraw\x12\x08.Request\x1a\t.Response\"\x00\x12*\n\x11Propogate_Deposit\x12\x08.Request\x1a\t.Response\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0c\x62ranch.proto\"\x8b\x01\n\x07Request\x12\x1b\n\x13\x63ustomer_request_id\x18\x01 \x01(\x05\x12\x1b\n\x0e\x66rom_branch_id\x18\x02 \x01(\x05H\x00\x88\x01\x01\x12\x15\n\rlogical_clock\x18\x03 \x01(\x05\x12\x12\n\x05money\x18\x04 \x01(\x05H\x01\x88\x01\x01\x42\x11\n\x0f_from_branch_idB\x08\n\x06_money\"q\n\x08Response\x12\x1b\n\x13\x63ustomer_request_id\x18\x01 \x01(\x05\x12\x15\n\rlogical_clock\x18\x02 \x01(\x05\x12\x0f\n\x07success\x18\x03 \x01(\x08\x12\x14\n\x07\x62\x61lance\x18\x04 \x01(\x05H\x00\x88\x01\x01\x42\n\n\x08_balance2\xc6\x01\n\x06\x42ranch\x12\x1e\n\x05Query\x12\x08.Request\x1a\t.Response\"\x00\x12!\n\x08Withdraw\x12\x08.Request\x1a\t.Response\"\x00\x12 \n\x07\x44\x65posit\x12\x08.Request\x1a\t.Response\"\x00\x12+\n\x12Propogate_Withdraw\x12\x08.Request\x1a\t.Response\"\x00\x12*\n\x11Propogate_Deposit\x12\x08.Request\x1a\t.Response\"\x00\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -21,10 +21,10 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'branch_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  _globals['_REQUEST']._serialized_start=16
-  _globals['_REQUEST']._serialized_end=107
-  _globals['_RESPONSE']._serialized_start=109
-  _globals['_RESPONSE']._serialized_end=222
-  _globals['_BRANCH']._serialized_start=225
-  _globals['_BRANCH']._serialized_end=423
+  _globals['_REQUEST']._serialized_start=17
+  _globals['_REQUEST']._serialized_end=156
+  _globals['_RESPONSE']._serialized_start=158
+  _globals['_RESPONSE']._serialized_end=271
+  _globals['_BRANCH']._serialized_start=274
+  _globals['_BRANCH']._serialized_end=472
 # @@protoc_insertion_point(module_scope)
