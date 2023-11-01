@@ -27,11 +27,11 @@ class Customer:
 
     # TODO: students are expected to send out the events to the Bank
     def executeEvents(self):
-        print("Customer: " + str(self.id))
         event_processed = []
 
         for event in self.events :
             self.logical_clock += 1
+            event_processed.append({"customer_request_id" : int(event["customer-request-id"]), "logical_clock" : self.logical_clock, "interface": event["interface"], "comment": "event_sent from customer " + str(self.id)})
             curr_message_logical_clock = self.logical_clock
             if event["interface"] == "query" :
                 response = self.stub.Query(branch_pb2.Request(customer_request_id = int(event["customer-request-id"]), logical_clock = curr_message_logical_clock))
@@ -39,12 +39,11 @@ class Customer:
                 response = self.stub.Withdraw(branch_pb2.Request(customer_request_id = int(event["customer-request-id"]), logical_clock = curr_message_logical_clock, money = event["money"]))
             elif event["interface"] == "deposit":
                 response = self.stub.Deposit(branch_pb2.Request(customer_request_id = int(event["customer-request-id"]), logical_clock = curr_message_logical_clock, money = event["money"]))
-            event_processed.append({"customer_request_id" : int(event["customer-request-id"]), "logical_clock" : self.logical_clock, "interface": event["interface"], "comment": "event_sent from customer" + str(self.id)})
             self.logical_clock = max(self.logical_clock, response.logical_clock) + 1
+            event_processed.append({"customer_request_id" : int(event["customer-request-id"]), "logical_clock" : self.logical_clock, "interface": event["interface"], "comment": "event_recv from branch " + str(self.id)})
             self.recvMsg.append(response)
 
-        results_json = json.dumps(event_processed)
-
+        results_json = json.dumps(event_processed, indent=4)
         print(results_json)
 
 def run(id, events) :
