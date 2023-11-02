@@ -84,5 +84,5 @@ f.close()
 
 all_events_json = json.dumps(all_events, indent = 4)
 f = open("events_output.json", "w")
-f.write(results_branch_json)
+f.write(all_events_json)
 f.close()
