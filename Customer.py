@@ -51,6 +51,3 @@ class Customer:
 def run(id, events) :
     c = Customer(id, events)
     c.executeEvents()
-
-if __name__ == "__main__" :
-    run(1, [{"id": 1, "interface": "query"}, {"id": 2, "interface": "deposit", "money" : 170}, {"id": 3, "interface": "withdraw", "money" : 70}, {"id": 4, "interface": "query"}])

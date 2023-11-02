@@ -105,6 +105,3 @@ def serve(id, balance, branches) :
     server.start()
     signal.signal(signal.SIGINT, lambda sig, frame : serve_stop(server, b))
     signal.pause()
-
-if __name__ == "__main__" :
-    serve(1, 500, [1])
