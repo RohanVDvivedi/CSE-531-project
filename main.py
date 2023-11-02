@@ -61,9 +61,15 @@ for i in range(len(input_params)) :
 
 all_events = []
 for r in results_customer :
-    all_events.extend(r["events"])
+    for e in r["events"]:
+        _e = dict(e)
+        _e["id"] = r["id"]
+        all_events.append(_e)
 for r in results_branch :
-    all_events.extend(r["events"])
+    for e in r["events"]:
+        _e = dict(e)
+        _e["id"] = r["id"]
+        all_events.append(_e)
 all_events.sort(key = lambda e : (e["customer-request-id"], e["logical_clock"]))
 
 # sort results_customer by id
