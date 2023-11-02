@@ -29,7 +29,7 @@ class Customer:
 
         for event in self.events :
             self.logical_clock += 1
-            event_processed.append({"customer_request_id" : int(event["customer-request-id"]), "logical_clock" : self.logical_clock, "interface": event["interface"], "comment": "event_sent from customer " + str(self.id)})
+            event_processed.append({"customer-request-id" : int(event["customer-request-id"]), "logical_clock" : self.logical_clock, "interface": event["interface"], "comment": "event_sent from customer " + str(self.id)})
             curr_message_logical_clock = self.logical_clock
             if event["interface"] == "query" :
                 response = self.stub.Query(branch_pb2.Request(customer_request_id = int(event["customer-request-id"]), logical_clock = curr_message_logical_clock))
@@ -38,7 +38,7 @@ class Customer:
             elif event["interface"] == "deposit":
                 response = self.stub.Deposit(branch_pb2.Request(customer_request_id = int(event["customer-request-id"]), logical_clock = curr_message_logical_clock, money = event["money"]))
             self.logical_clock = max(self.logical_clock, response.logical_clock) + 1
-            #event_processed.append({"customer_request_id" : int(event["customer-request-id"]), "logical_clock" : self.logical_clock, "interface": event["interface"], "comment": "event_recv from branch " + str(self.id)})
+            #event_processed.append({"customer-request-id" : int(event["customer-request-id"]), "logical_clock" : self.logical_clock, "interface": event["interface"], "comment": "event_recv from branch " + str(self.id)})
             self.recvMsg.append(response)
 
         event_processed.sort(key = lambda e : e["logical_clock"])

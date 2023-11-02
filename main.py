@@ -60,3 +60,12 @@ results.sort(key = lambda e : (-ord(e["type"][0]), e["id"]))
 # pretty print result
 results_json = json.dumps(results, indent = 4)
 print(results_json)
+
+all_events = []
+for r in results :
+    all_events.extend(r["events"])
+all_events.sort(key = lambda e : (e["customer-request-id"], e["logical_clock"]))
+
+# pretty print result
+all_events_json = json.dumps(all_events, indent = 4)
+print(all_events_json)
