@@ -4,7 +4,6 @@ import branch_pb2_grpc
 from concurrent import futures
 from threading import Lock
 import signal
-import json
 
 class Branch(branch_pb2_grpc.BranchServicer):
 
@@ -89,19 +88,18 @@ class Branch(branch_pb2_grpc.BranchServicer):
         send_time = self.advance_and_get_logical_clock()
         return branch_pb2.Response(customer_request_id = request.customer_request_id, logical_clock = send_time, success = True)
 
-def serve_stop(server, b) :
+def serve_stop(server, b, result_queue) :
     b.event_processed.sort(key = lambda e : e["logical_clock"])
     result_object = {"id":b.id, "type":"branch", "events": b.event_processed}
-    results_json = json.dumps(result_object, indent=4)
-    print(results_json)
+    result_queue.put(result_object)
     server.stop(None)
     del b
 
-def serve(id, balance, branches) :
+def serve(id, balance, branches, result_queue) :
     b = Branch(id, balance, branches)
     server = grpc.server(futures.ThreadPoolExecutor(max_workers = 5))
     branch_pb2_grpc.add_BranchServicer_to_server(b, server)
     server.add_insecure_port("localhost:" + str(50000 + b.id))
     server.start()
-    signal.signal(signal.SIGINT, lambda sig, frame : serve_stop(server, b))
+    signal.signal(signal.SIGINT, lambda sig, frame : serve_stop(server, b, result_queue))
     signal.pause()

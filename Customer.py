@@ -1,8 +1,6 @@
 import grpc
 import branch_pb2
 import branch_pb2_grpc
-import time
-import json
 
 class Customer:
     def __init__(self, id, events):
@@ -44,10 +42,8 @@ class Customer:
             self.recvMsg.append(response)
 
         event_processed.sort(key = lambda e : e["logical_clock"])
-        result_object = {"id":self.id, "type":"customer", "events": event_processed}
-        results_json = json.dumps(result_object, indent=4)
-        print(results_json)
+        return {"id":self.id, "type":"customer", "events": event_processed}
 
-def run(id, events) :
+def run(id, events, result_queue) :
     c = Customer(id, events)
-    c.executeEvents()
+    result_queue.put(c.executeEvents())
