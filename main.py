@@ -50,22 +50,33 @@ for branch_pid in branch_pids :
     branch_pid.join()
 
 # gather results of all customers and branches
-results = []
+results_customer = []
+results_branch = []
 for i in range(len(input_params)) :
-    results.append(result_queue.get())
-
-# sort results by id and whether it is from customer or branch
-results.sort(key = lambda e : (-ord(e["type"][0]), e["id"]))
-
-# pretty print result
-results_json = json.dumps(results, indent = 4)
-print(results_json)
+    r = result_queue.get()
+    if(r["type"] == "customer"):
+        results_customer.append(r)
+    else:
+        results_branch.append(r)
 
 all_events = []
-for r in results :
+for r in results_customer :
+    all_events.extend(r["events"])
+for r in results_branch :
     all_events.extend(r["events"])
 all_events.sort(key = lambda e : (e["customer-request-id"], e["logical_clock"]))
 
-# pretty print result
+# sort results_customer by id
+results_customer.sort(key = lambda e : e["id"])
+
+# sort results_branch by id
+results_branch.sort(key = lambda e : e["id"])
+
+results_customer_json = json.dumps(results_customer, indent = 4)
+print(results_customer_json)
+
+results_branch_json = json.dumps(results_branch, indent = 4)
+print(results_branch_json)
+
 all_events_json = json.dumps(all_events, indent = 4)
 print(all_events_json)
