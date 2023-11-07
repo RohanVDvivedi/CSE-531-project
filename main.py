@@ -7,7 +7,7 @@ import signal
 import Branch
 import Customer
 
-input_file = open('input.json')
+input_file = open('input_10.json')
 input_params = json.load(input_file)
 input_file.close()
 
