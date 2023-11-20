@@ -14,8 +14,8 @@ class Customer:
         self.channels = {}
         self.stubs = {}
         for branch_id in branch_ids :
-            self.channel[branch_id] = grpc.insecure_channel("localhost:" + str(50000 + branch_id))
-            self.stubs[branch_id] =  branch_pb2_grpc.BranchStub(self.channel)
+            self.channels[branch_id] = grpc.insecure_channel("localhost:" + str(50000 + branch_id))
+            self.stubs[branch_id] =  branch_pb2_grpc.BranchStub(self.channels[branch_id])
 
     def __del__(self) :
         for branch_id in self.channels :

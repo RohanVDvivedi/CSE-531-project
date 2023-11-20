@@ -33,7 +33,7 @@ time.sleep(1)
 customer_pids = []
 for customer in input_params :
     if customer["type"] == "customer" :
-        p = mp.Process(target = Customer.run,  args = (int(customer["id"]), customer["events"], result_queue))
+        p = mp.Process(target = Customer.run,  args = (int(customer["id"]), branches, customer["events"], result_queue))
         customer_pids.append(p)
 
 # run customer processes
@@ -51,7 +51,7 @@ for branch_pid in branch_pids :
 
 # gather results
 results = []
-for i in range(len(input_params)) :
+for i in range(len(customer_pids)) :
     results.extend(result_queue.get())
 
 results_json = json.dumps(results, indent = 4)

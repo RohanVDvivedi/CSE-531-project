@@ -51,7 +51,7 @@ class Branch(branch_pb2_grpc.BranchServicer):
         self.balance += request.money
         return branch_pb2.Response(success = True)
 
-def serve_stop(server, b, result_queue) :
+def serve_stop(server, b) :
     server.stop(None)
     del b
 
