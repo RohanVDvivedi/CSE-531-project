@@ -5,25 +5,15 @@ from typing import ClassVar as _ClassVar, Optional as _Optional
 DESCRIPTOR: _descriptor.FileDescriptor
 
 class Request(_message.Message):
-    __slots__ = ["customer_request_id", "from_branch_id", "logical_clock", "money"]
-    CUSTOMER_REQUEST_ID_FIELD_NUMBER: _ClassVar[int]
-    FROM_BRANCH_ID_FIELD_NUMBER: _ClassVar[int]
-    LOGICAL_CLOCK_FIELD_NUMBER: _ClassVar[int]
+    __slots__ = ["money"]
     MONEY_FIELD_NUMBER: _ClassVar[int]
-    customer_request_id: int
-    from_branch_id: int
-    logical_clock: int
     money: int
-    def __init__(self, customer_request_id: _Optional[int] = ..., from_branch_id: _Optional[int] = ..., logical_clock: _Optional[int] = ..., money: _Optional[int] = ...) -> None: ...
+    def __init__(self, money: _Optional[int] = ...) -> None: ...
 
 class Response(_message.Message):
-    __slots__ = ["customer_request_id", "logical_clock", "success", "balance"]
-    CUSTOMER_REQUEST_ID_FIELD_NUMBER: _ClassVar[int]
-    LOGICAL_CLOCK_FIELD_NUMBER: _ClassVar[int]
+    __slots__ = ["success", "balance"]
     SUCCESS_FIELD_NUMBER: _ClassVar[int]
     BALANCE_FIELD_NUMBER: _ClassVar[int]
-    customer_request_id: int
-    logical_clock: int
     success: bool
     balance: int
-    def __init__(self, customer_request_id: _Optional[int] = ..., logical_clock: _Optional[int] = ..., success: bool = ..., balance: _Optional[int] = ...) -> None: ...
+    def __init__(self, success: bool = ..., balance: _Optional[int] = ...) -> None: ...
