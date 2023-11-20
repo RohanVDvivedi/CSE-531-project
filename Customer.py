@@ -24,7 +24,7 @@ class Customer:
     def insert_result(self, results, response, event) :
         obj = {}
         if event["interface"] != "query" :
-            obj = {"interface": event["interface"], "branch": int(event["branch"]), "result": response.success}
+            obj = {"interface": event["interface"], "branch": int(event["branch"]), "result": ("success" if response.success else "fail") }
         else :
             obj = {"interface": event["interface"], "branch": int(event["branch"]), "balance": response.balance}
         if len(results) == 0 or results[-1]["recv"][-1]["branch"] != obj["branch"] :
