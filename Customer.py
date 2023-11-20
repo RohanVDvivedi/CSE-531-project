@@ -3,7 +3,7 @@ import branch_pb2
 import branch_pb2_grpc
 
 class Customer:
-    def __init__(self, id, events):
+    def __init__(self, id, branch_ids, events):
         # unique ID of the Customer
         self.id = id
         # events from the input
@@ -11,15 +11,15 @@ class Customer:
         # a list of received messages used for debugging purpose
         self.recvMsg = list()
         # pointer for the stub
-        self.stub = self.createStub()
+        self.channels = {}
+        self.stubs = {}
+        for branch_id in branch_ids :
+            self.channel[branch_id] = grpc.insecure_channel("localhost:" + str(50000 + branch_id))
+            self.stubs[branch_id] =  branch_pb2_grpc.BranchStub(self.channel)
 
     def __del__(self) :
-        self.channel.close()
-
-    # TODO: students are expected to create the Customer stub
-    def createStub(self):
-        self.channel = grpc.insecure_channel("localhost:" + str(50000 + self.id))
-        return branch_pb2_grpc.BranchStub(self.channel)
+        for branch_id in self.channels :
+            self.channels[branch_id].close()
 
     # TODO: students are expected to send out the events to the Bank
     def executeEvents(self):
@@ -27,15 +27,14 @@ class Customer:
 
         for event in self.events :
             if event["interface"] == "query" :
-                response = self.stub.Query(branch_pb2.Request())
+                response = self.stubs[int(event["branch"])].Query(branch_pb2.Request())
             elif event["interface"] == "withdraw":
-                response = self.stub.Withdraw(branch_pb2.Request(money = event["money"]))
+                response = self.stubs[int(event["branch"])].Withdraw(branch_pb2.Request(money = event["money"]))
             elif event["interface"] == "deposit":
-                response = self.stub.Deposit(branch_pb2.Request(money = event["money"]))
-            self.recvMsg.append(response)
+                response = self.stubs[int(event["branch"])].Deposit(branch_pb2.Request(money = event["money"]))
 
         return results
 
-def run(id, events, result_queue) :
-    c = Customer(id, events)
+def run(id, branch_ids, events, result_queue) :
+    c = Customer(id, branch_ids, events)
     result_queue.put(c.executeEvents())
