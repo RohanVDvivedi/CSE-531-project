@@ -12,6 +12,7 @@ class Branch(branch_pb2_grpc.BranchServicer):
         self.id = id
         # replica of the Branch's balance
         self.balance = balance
+        self.balanceLock = Lock()
         # the list of process IDs of the branches
         # the list of Client stubs to communicate with the branches
         self.channels = list()
@@ -28,27 +29,32 @@ class Branch(branch_pb2_grpc.BranchServicer):
 
     # TODO: students are expected to process requests from both Client and Branch
     def Query(self, request, context):
-        balance = self.balance
+        with self.balanceLock :
+            balance = self.balance
         return branch_pb2.Response(balance = balance)
     
     def Withdraw(self, request, context):
-        self.balance -= request.money
+        with self.balanceLock :
+            self.balance -= request.money
         for branch in self.stubList :
             branch.Propogate_Withdraw(branch_pb2.Request(money = request.money))
         return branch_pb2.Response(success = True)
     
     def Deposit(self, request, context):
-        self.balance += request.money
+        with self.balanceLock :
+            self.balance += request.money
         for branch in self.stubList :
             branch.Propogate_Deposit(branch_pb2.Request(money = request.money))
         return branch_pb2.Response(success = True)
     
     def Propogate_Withdraw(self, request, context):
-        self.balance -= request.money
+        with self.balanceLock :
+            self.balance -= request.money
         return branch_pb2.Response(success = True)
     
     def Propogate_Deposit(self, request, context):
-        self.balance += request.money
+        with self.balanceLock :
+            self.balance += request.money
         return branch_pb2.Response(success = True)
 
 def serve_stop(server, b) :
