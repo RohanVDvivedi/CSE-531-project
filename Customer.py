@@ -29,9 +29,9 @@ class Customer:
             if event["interface"] == "query" :
                 response = self.stubs[int(event["branch"])].Query(branch_pb2.Request())
             elif event["interface"] == "withdraw":
-                response = self.stubs[int(event["branch"])].Withdraw(branch_pb2.Request(money = event["money"]))
+                response = self.stubs[int(event["branch"])].Withdraw(branch_pb2.Request(money = int(event["money"])))
             elif event["interface"] == "deposit":
-                response = self.stubs[int(event["branch"])].Deposit(branch_pb2.Request(money = event["money"]))
+                response = self.stubs[int(event["branch"])].Deposit(branch_pb2.Request(money = int(event["money"])))
 
         return results
 
