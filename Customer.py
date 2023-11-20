@@ -12,8 +12,6 @@ class Customer:
         self.recvMsg = list()
         # pointer for the stub
         self.stub = self.createStub()
-        # logical clock
-        self.logical_clock = 0
 
     def __del__(self) :
         self.channel.close()
@@ -25,24 +23,18 @@ class Customer:
 
     # TODO: students are expected to send out the events to the Bank
     def executeEvents(self):
-        event_processed = []
+        results = []
 
         for event in self.events :
-            self.logical_clock += 1
-            event_processed.append({"customer-request-id" : int(event["customer-request-id"]), "logical_clock" : self.logical_clock, "interface": event["interface"], "comment": "event_sent from customer " + str(self.id)})
-            curr_message_logical_clock = self.logical_clock
             if event["interface"] == "query" :
-                response = self.stub.Query(branch_pb2.Request(customer_request_id = int(event["customer-request-id"]), logical_clock = curr_message_logical_clock))
+                response = self.stub.Query(branch_pb2.Request())
             elif event["interface"] == "withdraw":
-                response = self.stub.Withdraw(branch_pb2.Request(customer_request_id = int(event["customer-request-id"]), logical_clock = curr_message_logical_clock, money = event["money"]))
+                response = self.stub.Withdraw(branch_pb2.Request(money = event["money"]))
             elif event["interface"] == "deposit":
-                response = self.stub.Deposit(branch_pb2.Request(customer_request_id = int(event["customer-request-id"]), logical_clock = curr_message_logical_clock, money = event["money"]))
-            self.logical_clock = max(self.logical_clock, response.logical_clock) + 1
-            #event_processed.append({"customer-request-id" : int(event["customer-request-id"]), "logical_clock" : self.logical_clock, "interface": event["interface"], "comment": "event_recv from branch " + str(self.id)})
+                response = self.stub.Deposit(branch_pb2.Request(money = event["money"]))
             self.recvMsg.append(response)
 
-        event_processed.sort(key = lambda e : e["logical_clock"])
-        return {"id":self.id, "type":"customer", "events": event_processed}
+        return results
 
 def run(id, events, result_queue) :
     c = Customer(id, events)
