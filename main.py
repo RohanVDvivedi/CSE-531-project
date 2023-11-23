@@ -55,4 +55,8 @@ for i in range(len(customer_pids)) :
     results.extend(result_queue.get())
 
 results_json = json.dumps(results, indent = 4)
-print(results_json)
+
+# write output to file
+output_file = open('customer_events.json')
+output_file.write(results_json)
+output_file.close()
