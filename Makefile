@@ -3,3 +3,6 @@ compile_protobuf: branch.proto
 
 run:
 	python3 ./main.py
+
+check:
+	python3 checker.py ./customer_events.json
