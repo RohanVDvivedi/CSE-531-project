@@ -5,4 +5,4 @@ run:
 	python3 ./main.py
 
 check:
-	python3 checker.py ./customer_events.json
+	python3 checker.py ./events_output.json

@@ -57,6 +57,6 @@ for i in range(len(customer_pids)) :
 results_json = json.dumps(results, indent = 4)
 
 # write output to file
-output_file = open('customer_events.json', "w")
+output_file = open('events_output.json', "w")
 output_file.write(results_json)
 output_file.close()
