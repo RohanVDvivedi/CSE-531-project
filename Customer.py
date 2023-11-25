@@ -27,10 +27,7 @@ class Customer:
             obj = {"interface": event["interface"], "branch": int(event["branch"]), "result": ("success" if response.success else "fail") }
         else :
             obj = {"interface": event["interface"], "branch": int(event["branch"]), "balance": response.balance}
-        if len(results) == 0 or results[-1]["recv"][-1]["branch"] != obj["branch"] :
-            results.append({"id": self.id, "recv": [obj]})
-        else:
-            results[-1]["recv"].append(obj)
+        results.append({"id": self.id, "recv": [obj]})
 
     # TODO: students are expected to send out the events to the Bank
     def executeEvents(self):
