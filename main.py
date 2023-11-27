@@ -3,11 +3,17 @@ import multiprocessing as mp
 import time
 import os
 import signal
-
+import sys
 import Branch
 import Customer
 
-input_file = open('input_big.json')
+if len(sys.argv) < 2:
+    print("Input argument?")
+    exit()
+
+input_filename = sys.argv[1]
+
+input_file = open(input_filename)
 input_params = json.load(input_file)
 input_file.close()
 
